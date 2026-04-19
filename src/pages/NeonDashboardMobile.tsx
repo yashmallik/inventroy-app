@@ -111,7 +111,6 @@ export function NeonDashboardMobile() {
                 }`}>{item.status}</div>
                 <div className="mt-2 flex gap-1 justify-end">
                   <button onClick={() => navigate("/inventory", { state: { transition: "push" } })} className="text-[8px] border border-zinc-800 px-1 py-0.5 text-zinc-600"><span>Inventory</span></button>
-                  <button onClick={() => navigate("/inventory-mobile", { state: { transition: "push" } })} className="text-[8px] border border-zinc-800 px-1 py-0.5 text-zinc-600"><span>inventory</span></button>
                 </div>
              </div>
           </div>

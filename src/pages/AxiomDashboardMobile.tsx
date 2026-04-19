@@ -79,7 +79,6 @@ export function AxiomDashboardMobile() {
                 <div className={`text-[9px] font-bold uppercase tracking-wider ${item.status === 'CRITICAL' ? 'text-red-500' : 'text-emerald-600'}`}>{item.status}</div>
                 <div className="mt-2 flex gap-1 justify-end">
                    <button onClick={() => navigate("/axiom/inventory", { state: { transition: "push" } })} className="text-[8px] border border-slate-200 px-1 py-0.5 text-slate-400 uppercase font-bold"><span>Inventory</span></button>
-                   <button onClick={() => navigate("/axiom/inventory-mobile", { state: { transition: "push" } })} className="text-[8px] border border-slate-200 px-1 py-0.5 text-slate-400 uppercase font-bold"><span>inventory</span></button>
                 </div>
              </div>
           </div>

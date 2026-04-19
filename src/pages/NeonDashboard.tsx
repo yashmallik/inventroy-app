@@ -1,4 +1,6 @@
 import React from "react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import { NeonDashboardMobile } from "./NeonDashboardMobile";
 import { useInventory } from "../hooks/useInventory";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { Bolt, Filter } from "lucide-react";
@@ -14,7 +16,12 @@ const chartData = [
 ];
 
 export function NeonDashboard() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const { data: inventory } = useInventory();
+
+  if (isMobile) {
+    return <NeonDashboardMobile />;
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">

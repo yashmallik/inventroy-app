@@ -2,10 +2,12 @@ import { configureStore, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UIState {
   selectedItemIds: string[];
+  theme: "neon" | "axiom";
 }
 
 const initialState: UIState = {
   selectedItemIds: [],
+  theme: "neon",
 };
 
 const uiSlice = createSlice({
@@ -22,10 +24,13 @@ const uiSlice = createSlice({
     clearSelection: (state) => {
       state.selectedItemIds = [];
     },
+    setTheme: (state, action: PayloadAction<"neon" | "axiom">) => {
+      state.theme = action.payload;
+    },
   },
 });
 
-export const { toggleSelectItem, clearSelection } = uiSlice.actions;
+export const { toggleSelectItem, clearSelection, setTheme } = uiSlice.actions;
 
 export const store = configureStore({
   reducer: {

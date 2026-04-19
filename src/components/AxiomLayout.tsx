@@ -1,16 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Package, ReceiptText, BarChart3, HelpCircle, LogOut, Bell, Settings, Search, Plus, Map, Archive } from "lucide-react";
+import { LayoutDashboard, Package, ReceiptText, BarChart3, HelpCircle, LogOut, Bell, Settings, Search, Plus, Map, Archive, Palette } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setTheme } from "../store";
 
-export function AxiomLayout({ children, isMobile }: { children: React.ReactNode; isMobile?: boolean }) {
+import { useMediaQuery } from "../hooks/useMediaQuery";
+
+export function AxiomLayout({ children }: { children: React.ReactNode }) {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const location = useLocation();
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+
   const navItems = [
-    { name: "Dashboard", id: "Axiom-Dash-Desktop", icon: <LayoutDashboard size={20} />, path: "/axiom/dashboard", transition: "push_back" as const },
-    { name: "Inventory", id: "Axiom-Inv-Desktop", icon: <Package size={20} />, path: "/axiom/inventory", transition: "push" as const },
-    { name: "Stock", id: "Axiom-Inv-Mobile", icon: <Archive size={20} />, path: "/axiom/inventory-mobile", transition: "push" as const },
-    { name: "Dash", id: "Axiom-Dash-Mobile", icon: <Map size={20} />, path: "/axiom/dashboard-mobile", transition: "none" as const },
+    { name: "Dashboard", id: "Axiom-Dash-Desktop", icon: <LayoutDashboard size={20} />, path: "/dashboard", transition: "push_back" as const },
+    { name: "Inventory", id: "Axiom-Inv-Desktop", icon: <Package size={20} />, path: "/inventory", transition: "push" as const },
   ];
 
   if (isMobile) {
@@ -22,9 +28,31 @@ export function AxiomLayout({ children, isMobile }: { children: React.ReactNode;
              <span className="text-xl font-bold tracking-tighter text-blue-800 headline">AXIOM_LEDGER</span>
            </div>
            <div className="flex items-center gap-4">
+             <div className="relative">
+               <button onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} className="text-slate-500 hover:text-blue-600 transition-colors">
+                 <Palette size={20} />
+               </button>
+               {isThemeMenuOpen && (
+                 <div className="absolute right-0 mt-2 w-40 bg-white border border-slate-200 rounded-lg shadow-lg py-1 z-50">
+                   <button onClick={() => { dispatch(setTheme("neon")); setIsThemeMenuOpen(false); }} className="w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-700 hover:bg-slate-50">Neon Tokyo</button>
+                   <button onClick={() => { dispatch(setTheme("axiom")); setIsThemeMenuOpen(false); }} className="w-full text-left px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-700 hover:bg-slate-50">Axiom Ledger</button>
+                 </div>
+               )}
+             </div>
              <Bell size={20} className="text-slate-500" />
-             <div className="w-9 h-9 rounded-full border border-slate-200 overflow-hidden shadow-sm">
-               <img src="https://picsum.photos/seed/axiom-user/100/100" className="w-full h-full object-cover" />
+             <div className="relative">
+               <div 
+                 className="w-9 h-9 rounded-full border border-slate-200 overflow-hidden shadow-sm cursor-pointer"
+                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+               >
+                 <img src="https://picsum.photos/seed/axiom-user/100/100" className="w-full h-full object-cover" />
+               </div>
+               {isProfileMenuOpen && (
+                 <div className="absolute right-0 mt-2 w-36 bg-white border border-slate-200 rounded-lg shadow-lg py-1 z-50">
+                   <button onClick={() => { setIsProfileMenuOpen(false); navigate('/profile', { state: { transition: "push" } }); }} className="w-full text-left px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-slate-700 hover:bg-slate-50 transition-colors">My Profile</button>
+                   <button onClick={() => { setIsProfileMenuOpen(false); navigate('/login', { state: { transition: "push_back" } }); }} className="w-full text-left px-4 py-2 text-[11px] font-bold uppercase tracking-widest text-red-600 hover:bg-red-50 transition-colors">Logout</button>
+                 </div>
+               )}
              </div>
            </div>
         </header>
@@ -32,15 +60,15 @@ export function AxiomLayout({ children, isMobile }: { children: React.ReactNode;
           {children}
         </main>
         <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 flex justify-around items-center py-3 px-2 z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.04)]">
-          <Link to="/axiom/dashboard-mobile" state={{ transition: "none" }} className="flex flex-col items-center gap-1 text-blue-700">
+          <Link to="/dashboard" state={{ transition: "none" }} className="flex flex-col items-center gap-1 text-blue-700">
             <LayoutDashboard size={20} />
             <span><span>Dash</span></span>
           </Link>
-          <Link to="/axiom/inventory-mobile" state={{ transition: "none" }} className="flex flex-col items-center gap-1 text-slate-400">
+          <Link to="/inventory" state={{ transition: "none" }} className="flex flex-col items-center gap-1 text-slate-400">
             <Archive size={20} />
             <span><span>Vault</span></span>
           </Link>
-          <button key="grid-view" onClick={() => navigate("/axiom/dashboard-mobile", { state: { transition: "push_back" } })} className="flex flex-col items-center gap-1 text-slate-400">
+          <button key="grid-view" onClick={() => navigate("/dashboard", { state: { transition: "push_back" } })} className="flex flex-col items-center gap-1 text-slate-400">
             <span className="material-symbols-outlined">grid_view</span>
             <span className="hidden">Grid</span>
           </button>
@@ -53,7 +81,7 @@ export function AxiomLayout({ children, isMobile }: { children: React.ReactNode;
   }
 
   return (
-    <div className="theme-axiom min-h-screen font-body flex">
+    <div className="theme-axiom min-h-screen font-body flex bg-slate-50">
       <aside className="fixed left-0 top-0 h-screen w-64 bg-slate-100 p-6 space-y-8 border-r border-slate-200 z-50 flex flex-col">
         <div className="mb-2">
           <div className="flex items-center gap-3 mb-1">
@@ -92,10 +120,10 @@ export function AxiomLayout({ children, isMobile }: { children: React.ReactNode;
                <HelpCircle size={16} />
                <span className="text-[11px] uppercase tracking-widest">Help Center</span>
              </a>
-             <a href="#" className="flex items-center gap-3 text-slate-500 hover:text-red-600 transition-colors">
+             <button onClick={() => navigate('/login', { state: { transition: "push_back" } })} className="w-full flex items-center gap-3 text-slate-500 hover:text-red-600 transition-colors">
                <LogOut size={16} />
                <span className="text-[11px] uppercase tracking-widest">Logout</span>
-             </a>
+             </button>
           </div>
         </div>
       </aside>
@@ -109,6 +137,17 @@ export function AxiomLayout({ children, isMobile }: { children: React.ReactNode;
              </div>
            </div>
            <div className="flex items-center gap-6">
+             <div className="relative">
+               <button onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} className="text-slate-500 hover:text-blue-600 transition-colors">
+                 <Palette size={20} />
+               </button>
+               {isThemeMenuOpen && (
+                 <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-2 z-50">
+                   <button onClick={() => { dispatch(setTheme("neon")); setIsThemeMenuOpen(false); }} className="w-full text-left px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-700 hover:bg-slate-50">Neon Tokyo</button>
+                   <button onClick={() => { dispatch(setTheme("axiom")); setIsThemeMenuOpen(false); }} className="w-full text-left px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest text-slate-700 hover:bg-slate-50">Axiom Ledger</button>
+                 </div>
+               )}
+             </div>
              <Bell size={20} className="text-slate-500 hover:text-blue-700 cursor-pointer" />
              <Settings size={20} className="text-slate-500 hover:text-blue-700 cursor-pointer" />
              <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
@@ -116,15 +155,26 @@ export function AxiomLayout({ children, isMobile }: { children: React.ReactNode;
                  <p className="text-xs font-bold text-slate-900">Alex Chen</p>
                  <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Ops Manager</p>
                </div>
-               <div className="w-10 h-10 rounded-full border border-slate-200 overflow-hidden bg-slate-100">
-                 <img src="https://picsum.photos/seed/axiom-user/100/100" className="w-full h-full object-cover" />
+               <div className="relative">
+                 <div 
+                   className="w-10 h-10 rounded-full border border-slate-200 overflow-hidden bg-slate-100 cursor-pointer"
+                   onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                 >
+                   <img src="https://picsum.photos/seed/axiom-user/100/100" className="w-full h-full object-cover" />
+                 </div>
+                 {isProfileMenuOpen && (
+                   <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg py-2 z-50">
+                     <button onClick={() => { setIsProfileMenuOpen(false); navigate('/profile', { state: { transition: "push" } }); }} className="w-full text-left px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-700 hover:bg-slate-50 transition-colors">My Profile</button>
+                     <button onClick={() => { setIsProfileMenuOpen(false); navigate('/login', { state: { transition: "push_back" } }); }} className="w-full text-left px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-red-600 hover:bg-red-50 transition-colors">Logout</button>
+                   </div>
+                 )}
                </div>
              </div>
            </div>
-         </header>
-         <main className="flex-1 p-8 overflow-x-hidden">
-            {children}
-         </main>
+        </header>
+        <main className="flex-1 p-8 overflow-x-hidden">
+           {children}
+        </main>
       </div>
     </div>
   );

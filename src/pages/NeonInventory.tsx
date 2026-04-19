@@ -1,13 +1,20 @@
 import React from "react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import { NeonInventoryMobile } from "./NeonInventoryMobile";
 import { useInventory } from "../hooks/useInventory";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, toggleSelectItem } from "../store";
 import { Filter, Search, Download, PlusCircle, MoreVertical, History } from "lucide-react";
 
 export function NeonInventory() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const { data: inventory } = useInventory();
   const selectedIds = useSelector((state: RootState) => state.ui.selectedItemIds);
   const dispatch = useDispatch();
+
+  if (isMobile) {
+    return <NeonInventoryMobile />;
+  }
 
   return (
     <div className="flex-1 flex overflow-hidden -m-6 h-[calc(100vh-100px)]">

@@ -78,7 +78,6 @@ export function NeonInventoryMobile() {
                      <p className={`font-label text-[10px] uppercase font-bold neon-glow-text-secondary ${item.status === 'CRITICAL' ? 'text-error' : 'text-secondary'}`}>{item.status}</p>
                      <div className="mt-2 flex gap-2 justify-end">
                         <button onClick={() => navigate("/dashboard", { state: { transition: "none" } })} className="text-[8px] border border-zinc-700 px-1 py-0.5 text-slate-500 uppercase"><span>Stats</span></button>
-                        <button onClick={() => navigate("/dashboard-mobile", { state: { transition: "push_back" } })} className="text-[8px] border border-zinc-700 px-1 py-0.5 text-slate-500 uppercase"><span>dashboard</span></button>
                      </div>
                    </div>
                 </div>

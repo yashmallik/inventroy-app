@@ -1,10 +1,17 @@
 import React from "react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import { AxiomDashboardMobile } from "./AxiomDashboardMobile";
 import { useInventory } from "../hooks/useInventory";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 import { TrendingUp, AlertTriangle, Activity, Sparkles, Download } from "lucide-react";
 
 export function AxiomDashboard() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const { data: inventory } = useInventory();
+
+  if (isMobile) {
+    return <AxiomDashboardMobile />;
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">

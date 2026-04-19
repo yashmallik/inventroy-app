@@ -1,13 +1,20 @@
 import React from "react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import { AxiomInventoryMobile } from "./AxiomInventoryMobile";
 import { useInventory } from "../hooks/useInventory";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, toggleSelectItem } from "../store";
 import { Search, Filter, Download, Plus, MoreHorizontal, History, User } from "lucide-react";
 
 export function AxiomInventory() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const { data: inventory } = useInventory();
   const selectedIds = useSelector((state: RootState) => state.ui.selectedItemIds);
   const dispatch = useDispatch();
+
+  if (isMobile) {
+    return <AxiomInventoryMobile />;
+  }
 
   return (
     <div className="flex-1 flex overflow-hidden -m-8 h-[calc(100vh-76px)]">

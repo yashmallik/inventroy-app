@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
-import { store } from "./store";
+import { store, RootState } from "./store";
 
 // Pages
 import { NeonDashboard } from "./pages/NeonDashboard";
@@ -14,6 +14,8 @@ import { AxiomDashboard } from "./pages/AxiomDashboard";
 import { AxiomDashboardMobile } from "./pages/AxiomDashboardMobile";
 import { AxiomInventory } from "./pages/AxiomInventory";
 import { AxiomInventoryMobile } from "./pages/AxiomInventoryMobile";
+import { AuthPage } from "./pages/AuthPage";
+import { ProfilePage } from "./pages/ProfilePage";
 
 // Layouts
 import { NeonLayout } from "./components/NeonLayout";
@@ -64,28 +66,50 @@ function PageTransition({ children }: { children: React.ReactNode }) {
   );
 }
 
+function AppRoutes() {
+  const theme = useSelector((state: RootState) => state.ui.theme);
+
+  return (
+    <div className="min-h-screen">
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<AuthPage />} />
+        
+        {/* Unified Routes */}
+        <Route path="/dashboard" element={
+          theme === "neon" ? (
+            <NeonLayout><PageTransition><NeonDashboard /></PageTransition></NeonLayout>
+          ) : (
+            <AxiomLayout><PageTransition><AxiomDashboard /></PageTransition></AxiomLayout>
+          )
+        } />
+        
+        <Route path="/inventory" element={
+          theme === "neon" ? (
+            <NeonLayout><PageTransition><NeonInventory /></PageTransition></NeonLayout>
+          ) : (
+            <AxiomLayout><PageTransition><AxiomInventory /></PageTransition></AxiomLayout>
+          )
+        } />
+        
+        <Route path="/profile" element={
+          theme === "neon" ? (
+            <NeonLayout><PageTransition><ProfilePage theme="neon" /></PageTransition></NeonLayout>
+          ) : (
+            <AxiomLayout><PageTransition><ProfilePage theme="axiom" /></PageTransition></AxiomLayout>
+          )
+        } />
+      </Routes>
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <div className="min-h-screen">
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              
-              {/* Neon Tokyo Routes */}
-              <Route path="/dashboard" element={<NeonLayout><PageTransition><NeonDashboard /></PageTransition></NeonLayout>} />
-              <Route path="/dashboard-mobile" element={<NeonLayout isMobile><PageTransition><NeonDashboardMobile /></PageTransition></NeonLayout>} />
-              <Route path="/inventory" element={<NeonLayout><PageTransition><NeonInventory /></PageTransition></NeonLayout>} />
-              <Route path="/inventory-mobile" element={<NeonLayout isMobile><PageTransition><NeonInventoryMobile /></PageTransition></NeonLayout>} />
-              
-              {/* Axiom Ledger Routes */}
-              <Route path="/axiom/dashboard" element={<AxiomLayout><PageTransition><AxiomDashboard /></PageTransition></AxiomLayout>} />
-              <Route path="/axiom/dashboard-mobile" element={<AxiomLayout isMobile><PageTransition><AxiomDashboardMobile /></PageTransition></AxiomLayout>} />
-              <Route path="/axiom/inventory" element={<AxiomLayout><PageTransition><AxiomInventory /></PageTransition></AxiomLayout>} />
-              <Route path="/axiom/inventory-mobile" element={<AxiomLayout isMobile><PageTransition><AxiomInventoryMobile /></PageTransition></AxiomLayout>} />
-            </Routes>
-          </div>
+          <AppRoutes />
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>
