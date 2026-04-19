@@ -1,0 +1,6 @@
+{
+  "name": "Neon & Axiom Inventory Management",
+  "description": "A high-performance inventory tracking system featuring two distinct visual interfaces: retro-futuristic Neon Tokyo and professional Axiom Ledger. Built with React, Redux Toolkit, TanStack Query, and a Node.js sqlite backend.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

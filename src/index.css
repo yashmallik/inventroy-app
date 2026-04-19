@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --font-headline: "Sora", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Space Grotesk", sans-serif;
+}
+
+@layer base {
+  :root {
+    --primary: #ff2d78;
+    --secondary: #00ffcc;
+    --tertiary: #ffe04a;
+    --bg-dark: #0a0a12;
+    --surface: #0f0f1a;
+  }
+
+  .theme-neon {
+    background-color: var(--bg-dark);
+    color: #e8e0f0;
+    --neon-glow-primary: 0 0 8px #ff2d78;
+    --neon-glow-secondary: 0 0 8px #00ffcc;
+  }
+
+  .theme-axiom {
+    background-color: #f8fafc;
+    color: #0f172a;
+    --primary: #1d4ed8;
+    --bg-light: #f8fafc;
+    --surface: #ffffff;
+  }
+}
+
+.neon-glow-text-primary {
+  text-shadow: var(--neon-glow-primary);
+}
+
+.neon-glow-text-secondary {
+  text-shadow: var(--neon-glow-secondary);
+}
+
+.neon-border-pink {
+  border: 1px solid rgba(255, 45, 120, 0.3);
+  box-shadow: inset 0 0 12px rgba(255, 45, 120, 0.05);
+}
+
+.scanline {
+  background: linear-gradient(to bottom, transparent 50%, rgba(255, 45, 120, 0.02) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+}
