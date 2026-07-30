@@ -5,19 +5,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { store, RootState } from "./store";
 
-// Pages
-import { NeonDashboard } from "./pages/NeonDashboard";
-import { NeonDashboardMobile } from "./pages/NeonDashboardMobile";
-import { NeonInventory } from "./pages/NeonInventory";
-import { NeonInventoryMobile } from "./pages/NeonInventoryMobile";
-import { AxiomDashboard } from "./pages/AxiomDashboard";
-import { AxiomDashboardMobile } from "./pages/AxiomDashboardMobile";
-import { AxiomInventory } from "./pages/AxiomInventory";
-import { AxiomInventoryMobile } from "./pages/AxiomInventoryMobile";
+import { Dashboard } from "./pages/Dashboard";
+import { Inventory } from "./pages/Inventory";
 import { AuthPage } from "./pages/AuthPage";
 import { ProfilePage } from "./pages/ProfilePage";
 
-// Layouts
 import { NeonLayout } from "./components/NeonLayout";
 import { AxiomLayout } from "./components/AxiomLayout";
 
@@ -66,39 +58,25 @@ function PageTransition({ children }: { children: React.ReactNode }) {
   );
 }
 
-function AppRoutes() {
+function ThemedLayout({ children }: { children: React.ReactNode }) {
   const theme = useSelector((state: RootState) => state.ui.theme);
+  const Layout = theme === "neon" ? NeonLayout : AxiomLayout;
+  return (
+    <Layout>
+      <PageTransition>{children}</PageTransition>
+    </Layout>
+  );
+}
 
+function AppRoutes() {
   return (
     <div className="min-h-screen">
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<AuthPage />} />
-        
-        {/* Unified Routes */}
-        <Route path="/dashboard" element={
-          theme === "neon" ? (
-            <NeonLayout><PageTransition><NeonDashboard /></PageTransition></NeonLayout>
-          ) : (
-            <AxiomLayout><PageTransition><AxiomDashboard /></PageTransition></AxiomLayout>
-          )
-        } />
-        
-        <Route path="/inventory" element={
-          theme === "neon" ? (
-            <NeonLayout><PageTransition><NeonInventory /></PageTransition></NeonLayout>
-          ) : (
-            <AxiomLayout><PageTransition><AxiomInventory /></PageTransition></AxiomLayout>
-          )
-        } />
-        
-        <Route path="/profile" element={
-          theme === "neon" ? (
-            <NeonLayout><PageTransition><ProfilePage theme="neon" /></PageTransition></NeonLayout>
-          ) : (
-            <AxiomLayout><PageTransition><ProfilePage theme="axiom" /></PageTransition></AxiomLayout>
-          )
-        } />
+        <Route path="/dashboard" element={<ThemedLayout><Dashboard /></ThemedLayout>} />
+        <Route path="/inventory" element={<ThemedLayout><Inventory /></ThemedLayout>} />
+        <Route path="/profile" element={<ThemedLayout><ProfilePage /></ThemedLayout>} />
       </Routes>
     </div>
   );
